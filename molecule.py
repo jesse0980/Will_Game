@@ -26,12 +26,13 @@ class moleculeArr:
         newMol = molecule(self.strtLoco, self.rad)
         self.array.append(newMol)
     def deleteMol(self, ind):
-        self.array[ind].show = False
-        for n in self.links:
-            if ind in self.links[n]:
-                self.links[n].remove(ind)
-        if ind in self.links:
-            del self.links[ind]
+        if self.array and ind < len(self.array):
+            self.array[ind].show = False
+            for n in self.links:
+                if ind in self.links[n]:
+                    self.links[n].remove(ind)
+            if ind in self.links:
+                del self.links[ind]
         
     def checkCollisions(self, mouse_x, mouse_y):
         for i in range(len(self.array)):
@@ -61,6 +62,15 @@ class moleculeArr:
         self.links[node2].remove(node1)
     def changeText(self, ind, newText):
         self.array[ind].text = newText
+    def array_to_string(self):
+        string = ""
+        for m in self.array:
+            if m.show and m.text:
+                string += m.text
+        l = list(string)
+        l.sort()
+        string = ''.join(l)
+        return string
         
         
         

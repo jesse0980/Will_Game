@@ -12,9 +12,12 @@ yellow = (255, 255, 153)
 red = (219, 112, 147)
 black = (0, 0, 0)
 
+#Moleule Dict
+mDict = {}
+mDict["HHO"] = "Water"
 #function to return a text object to draw
-def getText(font, text1, loco):
-    surface = font.render(text1, True, white)
+def getText(font, text1, loco, color):
+    surface = font.render(text1, True, color)
     rect = surface.get_rect()
     rect.center = loco
     return [surface, rect]
@@ -58,19 +61,24 @@ text_button_clicked = False
 #Add Molecule Button Text
 font = pygame.font.Font(None, 36)
 text = "Add Molecule"
-molButtonInfo = getText(font, text, button.center)
+molButtonInfo = getText(font, text, button.center, white)
 #Add Link Button Text
 link_text = "Link"
-link_button_info = getText(font, link_text, LinkButton.center)
+link_button_info = getText(font, link_text, LinkButton.center, white)
 #Add Text Button Text
 add_text = "Add Text"
-add_text_info = getText(font, add_text, textButton.center)
+add_text_info = getText(font, add_text, textButton.center, white)
+
+#You built X molecule Text
+font2 = pygame.font.Font(None, 50)
+molecule_text = "You Built: "
 
 #Array of Molecules
 molecule_array = moleculeArr((400//2, 500//2), 25)
 mol = -1
 
 while not quit:
+    #To add text to a molecule
     if text_button_clicked:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -98,7 +106,7 @@ while not quit:
             molCol = blue if i != mol else yellow
             pygame.draw.circle(screen, molCol, molecule_array.array[i].location, molecule_array.array[i].radius)
             if molecule_array.array[i].text:
-                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location)
+                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location, white)
                 screen.blit(SandR[0], SandR[1])
     
     elif not link_button_clicked:
@@ -141,6 +149,15 @@ while not quit:
         pygame.draw.rect(screen, button_color, textButton)
         screen.blit(add_text_info[0], add_text_info[1])
         
+        #Draw you built X molecule
+        strRepresentation = molecule_array.array_to_string()
+        if strRepresentation in mDict:
+            strRepresentation = mDict[strRepresentation]
+            
+        all_molecule_comb = molecule_text + strRepresentation
+        molecule_text_info = getText(font2, all_molecule_comb, (350, 50), black)
+        screen.blit(molecule_text_info[0], molecule_text_info[1])
+        
         #Draw Trash
         sprite_group.update()
         sprite_group.draw(screen)
@@ -164,7 +181,7 @@ while not quit:
                 molCol = yellow
             pygame.draw.circle(screen, molCol, molecule_array.array[i].location, molecule_array.array[i].radius)
             if molecule_array.array[i].text:
-                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location)
+                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location, white)
                 screen.blit(SandR[0], SandR[1])
                             
             
@@ -176,6 +193,7 @@ while not quit:
         if button_clicked:
             molecule_array.addMolecule()
             button_clicked = False
+    #link molecules
     else:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -202,7 +220,7 @@ while not quit:
             molCol = blue if i != connect1 and i != connect2 else yellow
             pygame.draw.circle(screen, molCol, molecule_array.array[i].location, molecule_array.array[i].radius)
             if molecule_array.array[i].text:
-                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location)
+                SandR = getText(font, molecule_array.array[i].text, molecule_array.array[i].location, white)
                 screen.blit(SandR[0], SandR[1])
         if connect1 != -1 and connect2 != -1:
             molecule_array.createLink(connect1, connect2)
